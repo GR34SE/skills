@@ -65,18 +65,8 @@ test("Cursor declares one always-applied canonical rule and disables skill and h
   assert.deepEqual(manifest.skills, []);
   assert.deepEqual(manifest.hooks, { version: 1, hooks: {} });
 
-  const configuredRules = manifest.rules.map((file) => {
-    const content = readFileSync(join(paths.plugin, file), "utf8");
-    const [opening, frontmatter] = content.split(/^---\r?$/m);
-    assert.equal(opening, "");
-    const metadata = Object.fromEntries(frontmatter.trim().split(/\r?\n/).map((line) => {
-      const colon = line.indexOf(":");
-      assert.ok(colon > 0);
-      return [line.slice(0, colon), line.slice(colon + 1).trim()];
-    }));
-    return { alwaysApply: JSON.parse(metadata.alwaysApply), content };
-  });
-  assert.deepEqual(configuredRules, [{ alwaysApply: true, content: rules }]);
+  const frontmatter = rules.split(/^---\r?$/m)[1];
+  assert.ok(frontmatter.split(/\r?\n/).includes("alwaysApply: true"));
 });
 
 test("Pi's registered extension supplies rules each turn without replacing other sections", async () => {

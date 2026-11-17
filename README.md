@@ -18,4 +18,4 @@ Install a skill from GR34SE/skills. Read https://raw.githubusercontent.com/GR34S
 
 ## Checks
 
-Run `npm test` with Node.js 22 or later. The offline tests execute the shared hooks and Pi extension and check Cursor's native rule configuration without calling a model. Cursor's configuration test checks that the plugin selects only the canonical `SKILL.md`, marks it always-applied, and disables automatic skill and hook discovery. It rejects a return to asynchronous session-start delivery but does not exercise Cursor's request builder.
+Run `npm test` with Node.js 22 or later. The offline tests run the hooks and the Pi extension and check the Cursor plugin manifest without calling a model.
