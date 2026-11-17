@@ -1,0 +1,10 @@
+{
+  "name": "talk-to-me-nicely",
+  "description": "Always applies the talk-to-me-nicely rules in Cursor.",
+  "rules": ["./SKILL.md"],
+  "skills": [],
+  "hooks": {
+    "version": 1,
+    "hooks": {}
+  }
+}

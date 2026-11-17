@@ -1,0 +1,11 @@
+{
+  "name": "gr34se-skills",
+  "owner": { "name": "GR34SE" },
+  "plugins": [
+    {
+      "name": "talk-to-me-nicely",
+      "source": "skills/talk-to-me-nicely",
+      "description": "Always applies the talk-to-me-nicely rules in Cursor."
+    }
+  ]
+}
