@@ -2,53 +2,31 @@
 
 Rules for the messages a coding agent writes to you. The rules are in [SKILL.md](SKILL.md).
 
-An agent loads a skill only when it decides the skill fits the task. These rules have to hold for every message, so each install below also loads them at the start of every session. If the first reply of a new session does not start with 💭, the rules are not loaded.
-
-## Claude Code
+## Install
 
 ```sh
-npx skills add GR34SE/skills --skill talk-to-me-nicely -g
+npx skills add GR34SE/skills --skill talk-to-me-nicely
 ```
 
-The skill folder is also a plugin. Its SessionStart hook prints the rules into every session.
+This installs the skill. An agent loads a skill only when it decides the skill fits the task, and these rules have to hold for every message. To also load them at the start of every session, copy this prompt into your coding agent:
 
-## Codex
+```text
+Install the talk-to-me-nicely skill from GR34SE/skills so that its rules load at the start of every session.
 
-```sh
-codex plugin marketplace add GR34SE/skills
-codex plugin add talk-to-me-nicely@gr34se-skills
+1. Say which coding agent you are, then do only the matching step:
+   - Claude Code: run `npx skills@latest add GR34SE/skills --skill talk-to-me-nicely -g -a claude-code -y`
+   - Codex: run `codex plugin marketplace add GR34SE/skills`, then `codex plugin add talk-to-me-nicely@gr34se-skills`. Then ask me to open /hooks and trust the SessionStart hook.
+   - Pi: run `pi install git:github.com/GR34SE/skills`
+   - Cursor: ask me to open Customize, choose From GitHub Repository, enter GR34SE/skills, and install the talk-to-me-nicely plugin.
+   - Any other agent: run `npx skills@latest add GR34SE/skills --skill talk-to-me-nicely -g`. Then append the rules from the installed SKILL.md, without its frontmatter, to the instructions file you read at the start of every session. Show me that file's path and wait for my yes before you write to it.
+2. If a command fails, stop and show me the error. Do not change any other setting.
+3. Tell me to start a new session. Its first reply should start with 💭.
 ```
 
-Then run `codex`, open `/hooks`, and trust the SessionStart hook. Codex asks for that again when an update changes the hook.
+Then start a new session and ask:
 
-## Pi
-
-```sh
-pi install git:github.com/GR34SE/skills
+```text
+In two sentences, which rules do you follow when you write to me?
 ```
 
-## Cursor
-
-Open Customize, choose From GitHub Repository, enter `GR34SE/skills`, and install the talk-to-me-nicely plugin.
-
-## Other agents
-
-```sh
-npx skills add GR34SE/skills --skill talk-to-me-nicely -g
-```
-
-This installs the skill only. To keep the rules loaded, append them to the file your agent reads at the start of every session. The command below does it for OpenCode:
-
-```sh
-awk 'f>=2; /^---$/{f++}' ~/.agents/skills/talk-to-me-nicely/SKILL.md >> ~/.config/opencode/AGENTS.md
-```
-
-| Agent | File |
-|---|---|
-| OpenCode | `~/.config/opencode/AGENTS.md` |
-| Amp | `~/.config/amp/AGENTS.md` |
-| Zed | `~/.config/zed/AGENTS.md` |
-| Gemini CLI | `~/.gemini/GEMINI.md` |
-| GitHub Copilot CLI | `~/.copilot/copilot-instructions.md` |
-
-After you update the skill, delete the old copy from that file and run the command again.
+The reply should start with 💭.
