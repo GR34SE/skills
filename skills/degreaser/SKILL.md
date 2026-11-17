@@ -1,75 +1,80 @@
 ---
 name: degreaser
-description: Evidence-based deslop using 18 aspects, contextual examples, and a refutation pass. Use when the user names Degreaser or requests a systematic slop audit with justified findings and preservation of necessary code. Not a general bug/security review, formatter, or replacement for a specifically requested different review skill.
-license: MIT
-compatibility: Requires repository read/search tools. The optional scope helper requires Bash and Git on macOS or Linux.
+description: Find and explain code slop, including unnecessary mechanisms, hidden failures, disconnected changes, tests that cannot catch the claimed regression, and comments that only repeat code. Use when the user names Degreaser, asks to deslop code, or requests a slop review or cleanup. Preserve required behavior; fix only when asked. Not a general bug/security review or formatter.
 ---
 
 # Degreaser
 
-Find unjustified complexity, broken contracts and misleading verification.
-Judge requirements and evidence, not presumed AI authorship. Loops, wrappers,
-comments, validation, casts and unit tests are not intrinsically wrong.
+## What slop means here
+
+Slop is code or supporting material that adds work without serving a requirement,
+hides a failure or contract mismatch, or gives unsupported confidence that a task
+is complete. Deslop means identifying those defects and, when asked, correcting
+them without removing necessary behavior. It is not making code shorter at any cost.
+
+A polished implementation can still be slop. A wrapper can look well organized
+but add no boundary; a fallback can look robust but turn an outage into “no data”;
+a passing test can exercise only its own fake. Conversely, similar-looking code
+may enforce a real contract. Judge what the code does for its consumers, not its
+appearance, presumed AI authorship, or your familiarity with the pattern.
+
+The 18 **aspects** below are categories of these defects, not 18 style preferences.
+Each reference explains what to inspect, what evidence justifies a finding, and
+when to preserve the code. Do not assume you already recognize slop by intuition,
+including in code you wrote yourself.
+
+### Learn the distinction before judging
+
+For each applicable category, read its REPORT and PRESERVE examples together.
+Identify the contextual fact that changes the decision, then look for evidence
+of that fact in the actual repository. Never import an example's assumptions.
+
+- **Extra state:** a phase counter around three one-shot calls adds a mechanism
+  without a requirement. A persisted phase used to resume after a crash serves a
+  requirement. Check whether anything actually persists or consumes the phase.
+- **Fallbacks:** returning an empty list after a required bank read fails turns
+  unknown transfers into zero transfers. An optional recommendation list with an
+  explicit degraded result may be valid. Check the contract and caller's response
+  to failure, not merely whether a `catch` exists.
+- **Tests:** asserting the output of a fake that implements the tested rule says
+  nothing about production. A fake that only records calls can test the real
+  service's ordering. Trace which implementation determines the asserted result.
+- **Comments:** narrating a visible operation adds reading without new information.
+  Warning about a vendor's silent truncation can prevent data loss. Verify the
+  external constraint rather than trusting the warning's confident wording.
+
+These are starting examples, not the complete review. Apply the category-specific
+rules below even when a defect has a different surface form.
 
 ## 1. Establish intent and scope
 
-- Read the user's task, acceptance criteria and decisions from the conversation.
-  Never reconstruct intent from a diff, branch name or the examples below.
+- Use the user's request and session context to identify the task, acceptance
+  criteria and code to review. If asked to deslop the work just done, review that
+  work; do not ask the user to restate an already clear scope. Ask only when an
+  ambiguity would materially change what you review or edit.
 - Review is read-only. Edit only when the user requests cleanup or fixes.
   An invocation with no action means review, not permission to edit.
-- Resolve one scope: `worktree` compares HEAD with final staged, unstaged and
-  nonignored new contents; `branch` compares that final state with the merge-base
-  of HEAD and a user-specified base; `repository` explicitly audits current files.
-  Clarify an unknown scope or branch base. Never guess main, upstream or a base
-  from the branch name. An empty change is not permission to audit the repository.
-- Record root, base, assessed paths and any user-selected path restriction.
-  Other files are context, not permission to expand findings or edits.
+- Inspect the relevant files directly with the host's read/search tools and use
+  Git when a comparison is needed. Include new files and local edits that belong
+  to the requested work; a diff alone may omit them. For a branch comparison,
+  use the base established in the request or session; ask if it is unknown.
+- Keep findings and edits within that scope. Read connected code for context,
+  not as permission to audit the whole repository. An empty diff does not widen
+  the task. Do not infer requirements from a branch name or a teaching example.
 - For a change review, report defects introduced or worsened by the change.
   Read surrounding code to establish consequences, not to report unrelated debt.
   For an audit, apply each aspect to existing assessed code; lack of a diff is
   not itself a reason to mark an aspect inapplicable.
 - Respect the user's earlier decisions to keep code. Reopen a dismissed issue
   only when a new change introduces a cost their reason does not cover.
-
-### Capture Git scope
-
-Resolve the script path relative to this installed `SKILL.md`, not the project
-being reviewed. Read [scope.sh](scripts/scope.sh) before running it. It stages into
-a **temporary index**, writes Git objects but changes no user index, files or refs.
-Git's configured clean filters can run; use it only with permission to run those
-filters in this repository. Do not execute untrusted repository code to collect scope.
-
-```sh
-bash /absolute/installed/degreaser/scripts/scope.sh /absolute/repository worktree
-bash /absolute/installed/degreaser/scripts/scope.sh /absolute/repository branch BASE
-bash /absolute/installed/degreaser/scripts/scope.sh /absolute/repository repository
-```
-
-The script prints an absolute evidence directory. Read `scope.txt`, `paths.txt`,
-and `patch.diff` in bounded sections. `paths.z` is the NUL-delimited path list;
-`paths.txt` uses Git's quoted path display. Do not split filenames on whitespace.
-Use the recorded `tree` and `base` with `git show TREE:path` to read snapshot
-content; old-side lines use `base`, new-side lines use `tree`.
-The audit has no patch or old side. Narrow the listed paths only as requested.
-
-Capture while the worktree is idle: this is not an atomic filesystem snapshot.
-If files change during capture or review, recapture and recheck affected evidence.
-Snapshots use Git normalization, so do not mix worktree line numbers with snapshot
-quotes. Gitlinks represent submodule commits, not their dirty contents. Report
-unreviewed submodules, binaries and unavailable files explicitly. Read symlinks
-as their target text, never by following them.
-
-The helper refuses unresolved conflicts, sparse checkouts, repositories without
-HEAD and a `TMPDIR` inside the assessed repository. It is optional: when unavailable
-or unsuitable, use host Git/read tools to
-establish the same scope, include new files and record the limitation. Never
-silently substitute `git diff` alone or claim complete scope after a failed capture.
-Evidence may contain sensitive code. Keep it local and remove only this run's
-temporary evidence directory when no longer needed.
+- Cite the version actually read. If relevant files change during review, reread
+  them and recheck affected findings rather than relying on stale quotes.
 
 ## 2. Triage every aspect
 
-Use this table in priority order. Record `not-applicable` with a concrete reason
+Use this table to select which defect categories need inspection, in priority
+order. It is a reading plan, not a verdict based on pattern matches.
+Record `not-applicable` with a concrete reason
 only after establishing absence of the relevant construct in the assessed scope.
 File extensions alone rarely establish that. If applicability is uncertain, read
 the reference and inspect the code; unread is not inapplicable.
@@ -102,6 +107,26 @@ before judging it. The table is routing, not a replacement for evidence rules.
 Examples supply fictional context, not facts about the assessed repository.
 PRESERVE means only “not a defect under this aspect.”
 
+For each inspected construct, make the comparison explicit:
+
+1. **Required job:** identify the behavior, boundary or information it must
+   provide, using the task, contracts and actual callers. “Best practice,”
+   “robustness” and hypothetical future use are not requirements by themselves.
+2. **Actual contribution:** trace what the construct changes. For a test, name
+   the production regression it can catch; for a comment, the hidden trap it
+   prevents; for a layer or option, the current behavior or boundary it provides.
+3. **Mismatch or cost:** explain how it fails that job, hides evidence, or adds
+   a specific obligation with no needed benefit. A runtime bug is not required:
+   redundant narration and duplicated state also impose maintenance costs.
+4. **Concrete correction:** describe what to remove or change and why the required
+   behavior would remain. Compare errors, ordering, side effects and resource
+   constraints where relevant. Fewer lines alone do not establish improvement.
+
+Use these comparisons to identify candidates, not to invent justifications for a
+first impression. If the job or consequence cannot be established, record what is
+unknown; do not treat missing context as permission to delete code. The next pass
+must challenge the candidate before it becomes a finding.
+
 Group reads into these five families to share context; keep separate aspect
 verdicts. These groups are an execution convention, not a measured quality claim.
 
@@ -119,8 +144,9 @@ case, explanatory comment and introduced option individually where its rubric
 requires enumeration. Search results alone are not complete coverage. Continue
 large files in bounded reads instead of treating truncated output as absence.
 
-Collect candidates with aspect, path, old/new side, line range, exact quote and
-a concise defect title. Retain separate locations for repeated occurrences.
+Collect candidates with aspect, path, line range, exact quote and a concise
+defect title. For diff evidence, identify the old or new side. Retain separate
+locations for repeated occurrences.
 Do not silently drop short comments or small tests. Do not manufacture candidates
 to satisfy a quota.
 
@@ -128,9 +154,11 @@ to satisfy a quota.
 
 Before upholding a candidate:
 
-1. Re-read the exact cited snapshot lines and connected implementation, callers,
+1. Re-read the exact cited lines and connected implementation, callers,
    contracts, tests and relevant conventions.
-2. Test the strongest applicable preservation condition against that evidence.
+2. Try to disprove the proposed correction: find a current consumer, contract,
+   failure case or measured constraint that would make it wrong. Test the
+   strongest applicable preservation condition against that evidence.
    An example's resemblance is insufficient. Missing requirements are uncertainty,
    not proof that a feature or boundary is unnecessary.
 3. Route it to the right aspect. A routing mismatch is not a refutation of the
@@ -151,7 +179,7 @@ specifies. This groups presentation, never removes inspection obligations.
 If the host permits delegation, assign one read-only finder per applicable family
 and a fresh verifier for its candidates. Use the host's concurrency limits; never
 install a runner or spawn nested reviewers. Give workers the user's task, resolved
-scope/snapshot, path restrictions, applicable references, dismissals, evidence
+scope, path restrictions, applicable references, dismissals, evidence
 rules and output requirements. Verifiers receive candidate locations, quotes and
 titles, not the finder's persuasive rationale. Ask for concise evidence, not
 private deliberation.
@@ -166,8 +194,8 @@ second pass was not independent. A fresh session is not proof of correctness.
 
 Use readable Markdown, not a mandatory JSON interchange:
 
-- **Scope:** task, mode, root/base/snapshot, restrictions and changed-during-review
-  warnings. Empty changes end here with “no changes.”
+- **Scope:** what was reviewed, comparison base if used, and any restrictions.
+  If the requested changes are absent, say “no changes”; do not start an audit.
 - **Findings:** upheld candidates in aspect priority order, each with location,
   exact quote, consequence, decisive evidence, preservation check and action.
 - **Uncertainty:** unverified candidates and what would settle each.
@@ -187,8 +215,8 @@ When fixes are authorized, confirm the cited code still matches before editing.
 Change only upheld issues, preserve unrelated work and behavior, and avoid a
 broader rewrite. Run the project's relevant checks through real entry points.
 If checks fail, repair the in-scope regression; report unrelated failures honestly.
-If tests are absent or blocked, state that behavior remains unverified. Recapture
-the final scope and recheck edited code and affected callers against applicable
+If tests are absent or blocked, state that behavior remains unverified. Reread
+edited code and recheck it and affected callers against applicable
 families, including newly introduced constructs. Report fixes and remaining
 issues separately. Cleanup does not authorize commits, pushes or a PR.
 
