@@ -1,6 +1,6 @@
 ---
 name: degreaser
-description: Find and explain code slop, including unnecessary mechanisms, hidden failures, disconnected changes, tests that cannot catch the claimed regression, and comments that only repeat code. Use when the user names Degreaser, asks to deslop code, or requests a slop review or cleanup. Preserve required behavior; fix only when asked. Not a general bug/security review or formatter.
+description: Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks. Use when the user names Degreaser, asks to deslop code, or requests a slop review or cleanup. Preserve required behavior; fix only when asked. Not a general bug/security review or formatter.
 ---
 
 # Degreaser
