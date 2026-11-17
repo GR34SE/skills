@@ -1,0 +1,12 @@
+{
+  "name": "gr34se-skills",
+  "interface": { "displayName": "GR34SE skills" },
+  "plugins": [
+    {
+      "name": "talk-to-me-nicely",
+      "source": { "source": "local", "path": "./skills/talk-to-me-nicely" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}

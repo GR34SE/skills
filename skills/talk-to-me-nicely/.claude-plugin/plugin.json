@@ -1,0 +1,4 @@
+{
+  "name": "talk-to-me-nicely",
+  "description": "Loads the talk-to-me-nicely rules at the start of every Claude Code session."
+}
