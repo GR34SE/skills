@@ -7,8 +7,17 @@ Skills for coding agents.
 
 ## Install
 
+All skills:
+
 ```sh
-npx skills add GR34SE/skills --skill <name>
+npx skills add GR34SE/skills --skill '*'
+```
+
+One skill:
+
+```sh
+npx skills add GR34SE/skills --skill talk-to-me-nicely
+npx skills add GR34SE/skills --skill degreaser
 ```
 
 Or copy this prompt into your coding agent:
