@@ -178,7 +178,7 @@ specifies. This groups presentation, never removes inspection obligations.
 
 If the host permits delegation, assign one read-only finder per applicable family
 and a fresh verifier for its candidates. Use the host's concurrency limits; never
-install a runner or spawn nested reviewers. Give workers the user's task, resolved
+let workers spawn their own reviewers. Give workers the user's task, resolved
 scope, path restrictions, applicable references, dismissals, evidence
 rules and output requirements. Verifiers receive candidate locations, quotes and
 titles, not the finder's persuasive rationale. Ask for concise evidence, not
@@ -192,7 +192,7 @@ second pass was not independent.
 
 ## 5. Report, then fix only if requested
 
-Use readable Markdown, not a mandatory JSON interchange:
+Use readable Markdown:
 
 - **Scope:** what was reviewed, comparison base if used, and any restrictions.
   If the requested changes are absent, say “no changes”; do not start an audit.
