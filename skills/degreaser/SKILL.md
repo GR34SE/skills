@@ -128,7 +128,7 @@ unknown; do not treat missing context as permission to delete code. The next pas
 must challenge the candidate before it becomes a finding.
 
 Group reads into these five families to share context; keep separate aspect
-verdicts. These groups are an execution convention, not a measured quality claim.
+verdicts.
 
 1. Structure: unnecessary-complexity, unnecessary-layers, speculative-flexibility,
    wrong-abstraction, structural-erosion.
@@ -188,7 +188,7 @@ Workers only read/search. They must not edit, run project code, install packages
 contact services or delegate. Use enforced read-only controls if the host offers
 them; a prompt is not a sandbox. Report the actual controls. With no permitted
 delegation, perform finding and refutation sequentially and disclose that the
-second pass was not independent. A fresh session is not proof of correctness.
+second pass was not independent.
 
 ## 5. Report, then fix only if requested
 

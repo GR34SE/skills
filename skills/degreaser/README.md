@@ -38,16 +38,8 @@ You do not need to repeat context it already has. It asks only when a consequent
 detail is unclear, such as the base for a branch comparison. An empty diff never
 triggers a repository audit.
 
-The references contain 108 contextual REPORT/PRESERVE examples. Inspection covers
-structure, hidden errors and ineffective checks, integration, reuse and local
-conventions, and comments. Native read-only subagents are optional. Without them,
-the agent checks its own findings in a second pass and reports that this was not
-an independent review.
-
-This is an instruction library, not a model runner or automated slop detector.
-Examples teach decisions; they are not measured evidence of review effectiveness.
-It uses the agent's existing tools to read code and inspect changes. There are no
-bundled scripts, hooks, background services or dependencies on the old CLI.
+If the agent can start read-only subagents, a fresh one checks each finding.
+Otherwise the agent checks its own findings in a second pass and says so.
 
 ## Provenance
 
