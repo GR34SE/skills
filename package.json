@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "pi": {
-    "extensions": ["./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.js"],
+    "extensions": [
+      "./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.js",
+      "./skills/effect-ts-is-king/extensions/effect-ts-is-king.js"
+    ],
     "skills": ["./skills"]
   }
 }

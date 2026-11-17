@@ -1,0 +1,4 @@
+{
+  "name": "effect-ts-is-king",
+  "description": "Loads the effect-ts-is-king rules at the start of a Claude Code session when the project depends on Effect."
+}
