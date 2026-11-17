@@ -1,14 +1,8 @@
-# skills
-
-Skills for coding agents.
-
-Install all of them:
+## Skills
 
 ```sh
 npx skills add GR34SE/skills --skill '*'
 ```
-
-## Skills
 
 ### [talk-to-me-nicely](skills/talk-to-me-nicely/SKILL.md)
 
