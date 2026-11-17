@@ -1,6 +1,4 @@
 #!/bin/sh
-# Cursor sessionStart hook. Prints SKILL.md as the JSON that Cursor adds to the
-# session context: {"additional_context": "..."}.
 skill="$(dirname "$0")/../SKILL.md"
 tab=$(printf '\t')
 cr=$(printf '\r')
