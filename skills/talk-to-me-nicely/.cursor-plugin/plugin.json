@@ -2,6 +2,9 @@
   "name": "talk-to-me-nicely",
   "description": "Loads the talk-to-me-nicely rules at the start of every Cursor session.",
   "hooks": {
-    "sessionStart": [{ "command": "sh ./hooks/cursor-session-start.sh" }]
+    "version": 1,
+    "hooks": {
+      "sessionStart": [{ "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/cursor-session-start.sh\"" }]
+    }
   }
 }

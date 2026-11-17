@@ -1,6 +1,10 @@
 {
   "name": "gr34se-skills",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
   "pi": {
     "extensions": ["./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.js"],
     "skills": ["./skills"]
