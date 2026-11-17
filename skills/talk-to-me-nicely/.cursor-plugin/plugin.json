@@ -1,0 +1,12 @@
+{
+  "name": "talk-to-me-nicely",
+  "description": "Loads the talk-to-me-nicely rules at the start of every Cursor session.",
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "sh ./hooks/cursor-session-start.sh",
+        "timeout": 15
+      }
+    ]
+  }
+}

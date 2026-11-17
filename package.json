@@ -1,0 +1,9 @@
+{
+  "name": "gr34se-skills",
+  "private": true,
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.ts"],
+    "skills": ["./skills"]
+  }
+}
