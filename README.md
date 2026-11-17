@@ -22,7 +22,7 @@ npx skills add GR34SE/skills --skill degreaser
 
 ### [effect-ts-is-king](skills/effect-ts-is-king/SKILL.md)
 
-Stop reinventing Effect. Makes your agent search the whole Effect 4 toolbox before it hand-rolls any of 18 mechanisms, from retry loops to LLM clients.
+Stop reinventing Effect. Makes your agent search the whole Effect 4 toolbox before it hand-rolls any of 23 mechanisms, from retry loops to LLM clients.
 
 ```sh
 npx skills add GR34SE/skills --skill effect-ts-is-king

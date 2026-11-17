@@ -1,6 +1,6 @@
 ---
 name: effect-ts-is-king
-description: Stop reinventing Effect. Makes your agent search the whole Effect 4 toolbox before it hand-rolls any of 18 mechanisms, from retry loops to LLM clients. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever a package manifest lists `effect` or an `@effect/*` package, even when the request does not mention Effect. Not for projects without Effect.
+description: Stop reinventing Effect. Makes your agent search the whole Effect 4 toolbox before it hand-rolls any of 23 mechanisms, from retry loops to LLM clients. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever a package manifest lists `effect` or an `@effect/*` package, even when the request does not mention Effect. Not for projects without Effect.
 ---
 
 # Effect-TS Is King
@@ -16,48 +16,58 @@ Most Effect code written from habit uses a small corner of the library: generato
 - Apply this only where a package manifest lists `effect` or an `@effect/*` package. If none does, stop. Do not introduce Effect into a project unless the user asks.
 - Apply it to the whole task at hand: handlers, workers, integrations, persistence, configuration, pure transformations, and tests.
 - Stay inside the task. Do not rewrite unrelated code, replace the framework, or upgrade packages on your own initiative.
-- Where Effect covers only part of the backend, work within the existing boundary. Do not start a second runtime or migrate the rest without being asked.
+- Where Effect covers only part of the backend, work within the existing boundary. Do not add a second way of running effects, and do not migrate the rest without being asked.
 
 ## Do not trust your memory of the API
 
-This skill is written for Effect 4. Most of what you remember about Effect comes from Effect 3, which is legacy. Effect 4 renamed and merged modules, and it moved capabilities that used to be separate `@effect/*` packages, such as HTTP, SQL, RPC, AI, and the command line, into subpaths of `effect` itself. A call that looks right from memory is often an Effect 3 call that no longer exists.
+This skill is written for Effect 4. Most of what you remember about Effect comes from Effect 3, which is legacy, and Effect 4 changed a large part of the API. `Effect.catchAll` is now `Effect.catch`. `Effect.fork` is now `Effect.forkChild`. `Either` is now `Result`. `Context.Tag` and `Effect.Service` are now `Context.Service`. `Schema.decodeUnknown` is now `Schema.decodeUnknownEffect`. These are five examples out of hundreds, so a call that looks right from memory is often an Effect 3 call that no longer exists.
+
+The packages changed too. The core of HTTP, SQL, RPC, AI, the command line, workflows, and clustering used to live in separate `@effect/*` packages and is now inside `effect`, under subpaths such as `effect/http`, `effect/sql`, and `effect/ai`. Four kinds of package stay separate: platform runtimes (`@effect/platform-*`), database drivers (`@effect/sql-*`), LLM providers (`@effect/ai-*`), and the test integration (`@effect/vitest`).
 
 Before you write or change Effect code:
 
-1. Read `AGENTS.md` in the installed `effect` package, next to its `package.json`. Read all of it and follow the references that apply to your task.
-2. For every API you are not certain about, check its signature, error type, requirements, and interruption behavior in the package's source or declarations under `node_modules`. If documentation and the installed source disagree, the source wins.
-3. Read how neighboring code solves the same kind of problem, and follow that pattern unless it is the thing you are fixing.
+1. Read `AGENTS.md` in the installed `effect` package, next to its `package.json`. It is the library's own guide for coding agents, and it links to worked examples in the package's `ai-docs` folder. Read all of it, then read the examples for the area you are working in.
+2. For every API you are not certain about, check its signature, error type, requirements, and interruption behavior in the package's source under `node_modules`. Trust the installed package over external documentation, blog posts, and your memory.
+3. Read the `@stability` tag on an export you have not used in this project before. Many of the subpath modules are marked unstable, which is expected. When you build on an experimental export, say so in your report.
+4. Read how neighboring code solves the same kind of problem, and follow that pattern unless it is the thing you are fixing.
 
-Read the source to learn how to use the library. Import only public exports. If you cannot verify an API, say so in your report rather than guessing. If the project is still on Effect 3, the rules in this skill still apply, but expect different names and packages.
+Read the source to learn how to use the library. Import only public exports. If you cannot verify an API, say so in your report rather than guessing.
+
+This skill tells you when to reach for Effect. The package's own guide tells you how to write it. If the two disagree about how to write Effect code, follow the package. If the project is still on Effect 3, the rules in this skill still apply, but expect different names and packages.
 
 ## Search before you write a mechanism
 
-When you notice yourself about to write something from the left column, stop and search the installed Effect packages for the right column first.
+When you notice yourself about to write something from the left column, stop and look in the right column first.
 
-| You are about to write | Search Effect for |
+| You are about to write | Look in Effect for |
 |---|---|
 | `try`/`catch`, custom error classes, a hand-made result union | The typed error channel, tagged errors, `Cause`, `Exit`, `Result`, recovery combinators |
-| A retry loop, backoff, polling, `setInterval` | `Schedule`, retry and repeat |
-| `setTimeout`, `Date.now()`, manual deadlines, date arithmetic | Timeouts, `Duration`, `Clock`, `DateTime` |
-| `Promise.all`, `Promise.race`, a concurrency limiter, a worker pool | Concurrency options on the collection combinators, fibers, semaphores, `Queue`, `PubSub`, `Deferred` |
-| `try`/`finally`, connection lifecycle code, shutdown handlers | `Scope`, acquire and release, finalizers, layer lifetimes |
-| A validation library, hand-written parsing, type guards, casts | `Schema` |
-| Null checks, a `switch` over a kind field, deep equality, comparators, collection helpers | `Option`, `Match`, `Equal`, `Order`, and the data modules for arrays, records, and strings |
+| A retry loop, backoff, polling, `setInterval`, a fallback chain across providers | `Schedule`, retry and repeat, `ExecutionPlan` |
+| `setTimeout`, `new Date()`, `Date.now()`, manual deadlines, date arithmetic | Timeouts, `Duration`, `Clock`, `DateTime` |
+| `Promise.all`, `Promise.race`, a concurrency limiter, a worker pool | Concurrency options on the collection combinators, fibers, `Queue`, `PubSub`, `Deferred` |
+| A mutex, a per-key lock, a gate, a list of running background tasks | `Semaphore`, `PartitionedSemaphore`, `Latch`, `FiberSet`, `FiberMap`, the `Tx*` transactional modules |
+| `try`/`finally`, connection lifecycle code, shutdown handlers, a reference-counted or refreshable resource | `Scope`, acquire and release, finalizers, layer lifetimes, `RcMap`, `Resource`, `Pool` |
+| A validation library, hand-written parsing, type guards such as `isString`, casts, branded types | `Schema`, `Predicate`, `Brand` |
+| Null checks, a `switch` over a kind field, deep equality, comparators, collection helpers | `Option`, `Match`, `Equal`, `Order`, and the data modules for arrays, records, structs, and strings |
 | `process.env` reads, a configuration object, secrets held as plain strings | `Config`, `ConfigProvider`, `Redacted` |
 | Module-level singletons, clients passed through parameters, a homemade container | Services and `Layer` |
-| A `fetch` wrapper, a router, a hand-typed API client | The HTTP client and server, declarative HTTP APIs, RPC |
-| Database driver glue, manual transactions, migration scripts | The SQL packages |
+| A `fetch` wrapper, a router, middleware, multipart parsing, a hand-typed API client, hand-written OpenAPI | `effect/http`, `effect/http-api`, `effect/rpc`, `effect/graphql` |
+| Database driver glue, manual transactions, migration scripts, hand-written repositories, query batching | `effect/sql`, with an `@effect/sql-*` driver |
 | Async iterators, event emitters, batching, pagination loops | `Stream`, `Sink`, and their backpressure |
-| A `Map` used as a cache, request deduplication, a rate limiter, a connection pool | `Cache`, request batching, the rate limiter, `Pool` |
-| `fs`, `path`, `child_process`, sockets | The platform file system, path, command, and socket modules |
-| `console.log`, manual timing, passing trace identifiers around | Effect logging, log annotations, spans, `Metric`, the OpenTelemetry integration |
-| A provider SDK call to an LLM, parsing JSON out of model output | The Effect AI packages: model clients, structured output from a `Schema`, tool calls |
-| A cron library, a job runner, hand-made durable steps | `Cron`, `Schedule`, the workflow and cluster packages |
-| Fake timers, module mocks | The test clock, test layers, the Effect integration for the project's test runner |
+| A `Map` used as a cache, memoization, request deduplication | `Cache`, `ScopedCache`, `Request` and `RequestResolver` |
+| A rate limiter, a circuit breaker, a key-value store, a persisted queue or cache | `effect/persistence` |
+| `fs`, `path`, `child_process`, sockets, `worker_threads` | `FileSystem`, `Path`, `effect/process`, `effect/socket`, `effect/workers`, with an `@effect/platform-*` package |
+| An argument parser, interactive prompts, shell completions | `effect/cli` |
+| Hashing, password hashing, UUIDs, signing, encryption, JWT handling | `effect/crypto`, `effect/jose` |
+| A CSV, YAML, TOML, XML, NDJSON, or server-sent events parser, base64 or hex helpers | `effect/encoding` |
+| `console.log`, manual timing, passing trace identifiers around, a metrics endpoint | Effect logging, log annotations, spans, `Metric`, `effect/observability` |
+| A provider SDK call to an LLM, parsing JSON out of model output, tool-call plumbing, an MCP server or client | `effect/ai`, with an `@effect/ai-*` provider |
+| A cron library, a job runner, hand-made durable steps, an event log, a process that must run once across nodes | `Cron`, `Schedule`, `effect/workflow`, `effect/cluster`, `effect/eventlog` |
+| Fake timers, module mocks | `effect/testing`, test layers, `@effect/vitest` |
 
-The names in the right column are search terms, not guaranteed imports. Find where each one lives in the installed package and confirm its API there. The table is a starting point and does not list everything, so search by the problem you have as well as by these names.
+The names in the right column come from Effect 4. Treat them as places to start looking, and confirm the exports in the installed package before you use them. The table does not list everything, so also search by the problem you have.
 
-Start with what is already installed. Most capabilities ship inside `effect`. Platform adapters, database drivers, and LLM providers are separate official `@effect/*` packages. If you need one that is not installed, prefer adding it over writing the mechanism yourself, and tell the user you added it.
+Start with what is already installed. Most capabilities ship inside `effect`. If you need a separate official `@effect/*` package that is not installed, such as a database driver or an LLM provider, prefer adding it over writing the mechanism yourself, and tell the user you added it.
 
 ## Choose the smallest complete solution
 
@@ -78,9 +88,9 @@ Effect-first does not mean Effect everywhere. Leave direct arithmetic and obviou
 These properties are easy to lose when you write or move Effect code. Check each one that your change touches.
 
 - **Errors.** Expected failures stay in the typed error channel. Do not turn failures into successes, convert them all into defects, or widen them to `unknown`. Keep defects and interruption distinct from expected failures.
-- **Interruption.** A promise-based SDK enters Effect at one boundary, with its cancellation connected to interruption. Do not leave unmanaged promises, timers, or detached tasks running.
+- **Interruption.** A promise-based SDK enters Effect at one boundary. Pass the abort signal that Effect provides to the SDK, so interrupting the fiber cancels the request. Do not leave unmanaged promises, timers, or detached tasks running.
 - **Resources.** A scope owns every resource and every background fiber. Anything acquired is released on success, on failure, and on interruption.
-- **Runtime.** Build the production layers once, at the application's entry point. Do not construct runtimes or run effects to promises inside feature code.
+- **Runtime.** Build the production layers once, at the application's entry point, and run the program there. When a host that is not written in Effect calls into Effect, such as a framework's request handler, go through one shared `ManagedRuntime`. Do not build layers or run effects to promises ad hoc inside feature code.
 - **Contracts.** Decode untrusted input with a schema at the boundary. Keep the nullability, field names, and types of the external API or database as they are. When a type is too loose, fix the contract rather than adding casts, non-null assertions, or repeated defensive checks.
 - **Configuration.** One place owns each setting, its default, and its validation.
 - **Guarantees.** Simplifying code must not remove backpressure, idempotency, transaction boundaries, or required validation.
@@ -90,5 +100,5 @@ These properties are easy to lose when you write or move Effect code. Check each
 
 1. Read your whole diff against the left column of the table. Replace every mechanism Effect already provides, and remove wrappers, options, and abstractions that nothing currently needs.
 2. Test the behavior that matters: business decisions, error handling, interruption, resource release, retry policy, concurrency limits, and input contracts. Use the test clock and replaceable layers instead of real time and module mocks. Make sure each test double fails and cleans up the way the real service does. Skip tests that only restate types or check that a constructor exists.
-3. Run the project's tests, type checking, and linting, and fix what fails.
+3. Run the project's tests, type checking, and linting, and fix what fails. If the project uses the Effect language service, its diagnostics appear in the type check. Fix them like any other error.
 4. Report what you changed, what you verified and how, and what you could not verify. For each custom mechanism you kept, name the missing capability that made it necessary.
