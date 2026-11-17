@@ -1,10 +1,10 @@
 {
   "name": "talk-to-me-nicely",
-  "description": "Loads the talk-to-me-nicely rules at the start of every Cursor session.",
+  "description": "Always applies the talk-to-me-nicely rules in Cursor.",
+  "rules": ["./SKILL.md"],
+  "skills": [],
   "hooks": {
     "version": 1,
-    "hooks": {
-      "sessionStart": [{ "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/cursor-session-start.sh\"" }]
-    }
+    "hooks": {}
   }
 }

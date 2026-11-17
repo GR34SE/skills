@@ -5,7 +5,7 @@
     {
       "name": "talk-to-me-nicely",
       "source": "skills/talk-to-me-nicely",
-      "description": "Loads the talk-to-me-nicely rules at the start of every Cursor session."
+      "description": "Always applies the talk-to-me-nicely rules in Cursor."
     }
   ]
 }

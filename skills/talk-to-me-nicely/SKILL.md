@@ -1,5 +1,6 @@
 ---
 name: talk-to-me-nicely
+alwaysApply: true
 description: Rules for how the agent writes every message to the user. Each reply starts with 💭, leads with the answer or the current state, uses plain full sentences, stays inside hard length limits, and closes open work with who does what next and when. Use for every reply in every session, whatever the task, and when the user says "in simple terms", "un-condense", or "cut the jargon".
 ---
 

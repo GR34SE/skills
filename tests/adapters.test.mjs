@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -26,7 +26,6 @@ function run(command, { plugin, project }, input) {
     env: {
       ...process.env,
       CLAUDE_PLUGIN_ROOT: plugin,
-      CURSOR_PLUGIN_ROOT: plugin,
       PLUGIN_ROOT: plugin,
     },
     input: JSON.stringify(input),
@@ -59,25 +58,25 @@ for (const source of ["startup", "resume", "clear", "compact", "fork"]) {
   });
 }
 
-test("Cursor's versioned hook configuration emits rules outside the plugin directory", (t) => {
+test("Cursor declares one always-applied canonical rule and disables skill and hook discovery", (t) => {
   const paths = fixture(t);
   const manifest = readJson(join(paths.plugin, ".cursor-plugin/plugin.json"));
-  const { version, hooks } = manifest.hooks;
-  assert.equal(version, 1);
-  assert.equal(hooks.sessionStart.length, 1);
-  const output = JSON.parse(run(hooks.sessionStart[0].command, paths, {
-    session_id: "adapter-test",
-    is_background_agent: false,
-  }));
-  assert.equal(output.additional_context, rules);
+  assert.deepEqual(manifest.rules, ["./SKILL.md"]);
+  assert.deepEqual(manifest.skills, []);
+  assert.deepEqual(manifest.hooks, { version: 1, hooks: {} });
 
-  const updatedRules = `${rules}\nA tab:\tA quote: "A path: \\\\test"\n`;
-  writeFileSync(join(paths.plugin, "SKILL.md"), updatedRules);
-  const updated = JSON.parse(run(hooks.sessionStart[0].command, paths, {
-    session_id: "adapter-test-2",
-    is_background_agent: false,
-  }));
-  assert.equal(updated.additional_context, updatedRules);
+  const configuredRules = manifest.rules.map((file) => {
+    const content = readFileSync(join(paths.plugin, file), "utf8");
+    const [opening, frontmatter] = content.split(/^---\r?$/m);
+    assert.equal(opening, "");
+    const metadata = Object.fromEntries(frontmatter.trim().split(/\r?\n/).map((line) => {
+      const colon = line.indexOf(":");
+      assert.ok(colon > 0);
+      return [line.slice(0, colon), line.slice(colon + 1).trim()];
+    }));
+    return { alwaysApply: JSON.parse(metadata.alwaysApply), content };
+  });
+  assert.deepEqual(configuredRules, [{ alwaysApply: true, content: rules }]);
 });
 
 test("Pi's registered extension supplies rules each turn without replacing other sections", async () => {
