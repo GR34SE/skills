@@ -18,10 +18,21 @@ Claude Code needs nothing more after a global install. The skill folder is also 
 @~/.claude/skills/talk-to-me-nicely/SKILL.md
 ```
 
-Codex does not run that hook and cannot import a file, so append the rules to `~/.codex/AGENTS.md`:
+Every other agent needs a copy of the rules in the file it reads at the start of every session. This command appends them, here for Codex:
 
 ```sh
 awk 'f>=2; /^---$/{f++}' ~/.agents/skills/talk-to-me-nicely/SKILL.md >> ~/.codex/AGENTS.md
 ```
 
-After you update the skill, delete the old copy from `AGENTS.md` and run the command again.
+| Agent | File |
+|---|---|
+| Codex | `~/.codex/AGENTS.md` |
+| Pi | `~/.pi/agent/AGENTS.md` |
+| OpenCode | `~/.config/opencode/AGENTS.md` |
+| Amp | `~/.config/amp/AGENTS.md` |
+| Zed | `~/.config/zed/AGENTS.md` |
+| Gemini CLI | `~/.gemini/GEMINI.md` |
+| GitHub Copilot CLI | `~/.copilot/copilot-instructions.md` |
+| Cursor | Settings, Rules, User Rules. Paste the text there. |
+
+After you update the skill, delete the old copy from that file and run the command again.
