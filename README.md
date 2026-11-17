@@ -15,7 +15,3 @@ Or copy this prompt into your coding agent:
 ```text
 Install a skill from GR34SE/skills. Read https://raw.githubusercontent.com/GR34SE/skills/main/README.md and ask me which skill I want. Then read skills/<name>/README.md in the same repo and follow the prompt in its Install section.
 ```
-
-## Checks
-
-Run `npm test` with Node.js 22 or later. The offline tests run the hooks and the Pi extension and check the Cursor plugin manifest without calling a model.

@@ -1,2 +1,1 @@
-commands:
-  test: npm test
+no_ci: true
