@@ -6,7 +6,6 @@ usage() {
     '       bash scope.sh REPOSITORY branch BASE'
 }
 
-if [[ ${1-} == --help ]]; then usage; exit 0; fi
 if [[ $# -lt 2 || $# -gt 3 ]]; then usage >&2; exit 2; fi
 repo=$1
 mode=$2
@@ -32,10 +31,12 @@ fi
 base=$head
 if [[ $mode == branch ]]; then
   base_ref=$(git rev-parse --verify --end-of-options "$3^{commit}")
-  base=$(git merge-base "$head" "$base_ref")
+  if ! base=$(git merge-base "$head" "$base_ref"); then
+    printf '%s\n' 'HEAD and BASE have no merge base.' >&2
+    exit 2
+  fi
 fi
 
-umask 077
 evidence=$(mktemp -d "${TMPDIR:-/tmp}/degreaser-scope.XXXXXXXX")
 success=false
 cleanup() {
@@ -66,6 +67,8 @@ git ls-files --cached -z > "$evidence/tracked.z"
 git update-index --no-assume-unchanged -z --stdin < "$evidence/tracked.z"
 git update-index --no-skip-worktree -z --stdin < "$evidence/tracked.z"
 git -c core.fsmonitor=false add --all -- .
+git -c core.fsmonitor=false diff-files --ignore-submodules=none --name-only -z |
+  git update-index -z --stdin
 tree=$(git write-tree)
 
 if [[ $mode == repository ]]; then
