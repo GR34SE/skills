@@ -113,16 +113,37 @@ printf 'PASS explicit merge-base, local changes, invalid requests and unrelated 
 new_repo clean
 capture worktree
 [[ ! -s $evidence/paths.z && ! -s $evidence/patch.diff ]] || fail 'clean scope not empty'
+git -C "$repo" config core.splitIndex true
 git -C "$repo" update-index --split-index
+printf 'split staged\n' > "$repo/tracked.txt"
+git -C "$repo" add tracked.txt
 cp "$repo/.git/index" "$scratch/split.before"
+ls "$repo/.git"/sharedindex.* > "$scratch/shared.before"
 printf 'split changed\n' > "$repo/tracked.txt"
 capture worktree
 equal "$(git -C "$repo" show "$(field "$evidence" tree):tracked.txt")" 'split changed' 'split index works'
 cmp "$scratch/split.before" "$repo/.git/index" || fail 'split index changed'
+ls "$repo/.git"/sharedindex.* > "$scratch/shared.after"
+cmp "$scratch/shared.before" "$scratch/shared.after" || fail 'capture left a shared index in the Git directory'
 git -C "$repo" config core.sparseCheckout true
 reject worktree
 grep -q 'Sparse checkouts' "$scratch/rejected.err" || fail 'wrong sparse failure'
 printf 'PASS empty scope, split index and sparse refusal\n'
+
+new_repo racy
+same_second=false
+for _ in 1 2 3 4 5; do
+  second=$(date +%s)
+  printf 'v2\n' > "$repo/tracked.txt"
+  git -C "$repo" add tracked.txt
+  printf 'v3\n' > "$repo/tracked.txt"
+  if [[ $(date +%s) == "$second" ]]; then same_second=true; break; fi
+done
+[[ $same_second == true ]] || fail 'fixture could not stage and rewrite within one second'
+sleep 1
+capture worktree
+equal "$(git -C "$repo" show "$(field "$evidence" tree):tracked.txt")" v3 'same-size rewrite after staging captured'
+printf 'PASS same-size rewrite in the second it was staged\n'
 
 repo="$scratch/unborn"
 git init --quiet "$repo"

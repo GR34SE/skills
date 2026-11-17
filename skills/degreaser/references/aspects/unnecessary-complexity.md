@@ -50,7 +50,7 @@ removing a counter and loop that encode no requirement.
 ### unnecessary-complexity-B2 · REPORT
 
 Context: A basket has at most twelve lines; its count is read only on display.
-Both mutations below also require corresponding count updates everywhere else.
+Every other mutation of `lines` must update `count` as well.
 
 ```python
 def add(self, line):

@@ -60,16 +60,16 @@ if [[ -s $evidence/conflicts.z ]]; then
   exit 2
 fi
 index=$(git rev-parse --git-path index)
-if [[ -f $index ]]; then cp "$index" "$evidence/index"; fi
+if [[ -f $index ]]; then cp -p "$index" "$evidence/index"; fi
 export GIT_INDEX_FILE="$evidence/index"
-git -c core.fsmonitor=false update-index --no-split-index
+git -c core.splitIndex=false -c core.fsmonitor=false update-index --no-split-index
 git ls-files --cached -z > "$evidence/tracked.z"
-git update-index --no-assume-unchanged -z --stdin < "$evidence/tracked.z"
-git update-index --no-skip-worktree -z --stdin < "$evidence/tracked.z"
-git -c core.fsmonitor=false add --all -- .
+git -c core.splitIndex=false update-index --no-assume-unchanged -z --stdin < "$evidence/tracked.z"
+git -c core.splitIndex=false update-index --no-skip-worktree -z --stdin < "$evidence/tracked.z"
+git -c core.splitIndex=false -c core.fsmonitor=false add --all -- .
 git -c core.fsmonitor=false diff-files --ignore-submodules=none --name-only -z |
-  git update-index -z --stdin
-tree=$(git write-tree)
+  git -c core.splitIndex=false update-index -z --stdin
+tree=$(git -c core.splitIndex=false write-tree)
 
 if [[ $mode == repository ]]; then
   base=none
