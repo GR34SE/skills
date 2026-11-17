@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Prints SKILL.md when the project depends on Effect. Prints nothing otherwise.
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, realpathSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -39,6 +39,14 @@ export const usesEffect = (dir, depth = 1) => {
 
 export const rules = () => readFileSync(new URL("../SKILL.md", import.meta.url), "utf8");
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  if (usesEffect(process.env.CLAUDE_PROJECT_DIR || process.cwd())) process.stdout.write(rules());
+const runAsScript = () => {
+  try {
+    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+  } catch {
+    return false; // no resolvable entry script: imported by a host, not run as the hook
+  }
+};
+
+if (runAsScript() && usesEffect(process.env.CLAUDE_PROJECT_DIR || process.cwd())) {
+  process.stdout.write(rules());
 }
