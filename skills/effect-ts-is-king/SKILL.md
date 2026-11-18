@@ -1,6 +1,6 @@
 ---
 name: effect-ts-is-king
-description: Stop reinventing Effect. Makes your agent search the whole Effect 4 toolbox before it hand-rolls any of 23 mechanisms, from retry loops to LLM clients. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever a package manifest lists `effect` or an `@effect/*` package, even when the request does not mention Effect. Not for projects without Effect.
+description: Maximize use of the Effect API and its ecosystem instead of writing local abstractions. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever a package manifest lists `effect` or an `@effect/*` package, even when the request does not mention Effect. Not for projects without Effect.
 ---
 
 # Effect-TS Is King
