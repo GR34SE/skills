@@ -41,7 +41,8 @@ guard, option, layer, test, comment or piece of documentation.
 Who carries the burden of proof depends on what the correction risks:
 
 - **The correction cannot change behavior**, and the change wrote the
-  construct: a pass-through, a repeated literal or type, a cast where the real
+  construct or, in an audit of existing code, the construct is in the named
+  paths: a pass-through, a repeated literal or type, a cast where the real
   type exists, a comment, text that became false. The default is to fix it.
   Keeping it requires naming the consumer or trap that needs it. “Negligible
   cost,” “public,” “true” and “existing convention” are not reasons.
