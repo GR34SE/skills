@@ -1,6 +1,6 @@
 ---
 name: effect-ts-is-king
-description: Maximize use of the Effect API and its ecosystem instead of writing local abstractions. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever the project has an Effect dependency: a package manifest lists `effect` or an `@effect/*` package, or the code imports from one. Use it even when the request does not mention Effect. Not for projects without Effect.
+description: Maximize use of the Effect API and its ecosystem instead of writing local abstractions. Use for TypeScript backend implementation, debugging, refactoring, and code review whenever the project has an Effect dependency, meaning a package manifest lists `effect` or an `@effect/*` package, or the code imports from one. Use it even when the request does not mention Effect. Not for projects without Effect.
 ---
 
 # Effect-TS Is King
