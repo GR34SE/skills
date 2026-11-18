@@ -130,8 +130,8 @@ Fix a candidate without asking only when all of these hold:
   ordering, side effects and public surface.
 - The edit stays inside the assessed scope and needs no design choice.
 - The project's checks (typecheck, lint, tests) can confirm it, or it changes
-  text only. Find out what those checks are before the first edit. If they
-  exist but cannot run here, still make the fix and list it as unverified.
+  text only. Find out what those checks are before the first edit. If none
+  exist or they cannot run here, still make the fix and list it as unverified.
 
 Ask when the correction changes what a consumer observes (an error becomes
 visible, a fallback or default goes away), removes a test, a public option or
@@ -140,8 +140,8 @@ or rests on evidence you could not obtain. A masked error is the standard
 case: surfacing it is correct and still a behavior change.
 
 The user's words override this split. “Review only” or “report” means no edits
-at all. “Fix everything” moves the ask class into fixes, except where evidence
-is missing.
+at all: every standing candidate, including the fix-now class, goes to
+“Your call”.
 
 For each fix: make the smallest edit, preserve unrelated work, and avoid a
 broader rewrite. Then verify the cleanup as a whole:
@@ -183,10 +183,11 @@ in full in one pass, roughly a few dozen files, and the host allows delegation.
 
 - Split by module or directory so every file belongs to exactly one worker.
   Do not split by aspect: that makes several workers read the same code.
-- Give each worker the task, its paths, the user's earlier keep decisions and
-  this skill. A worker runs steps 2 to 4 on its slice but leaves the checks to
-  you, edits only its own files, does not commit or delegate, and returns the
-  report from step 5. Slop it sees outside its slice goes into that report.
+- Give each worker the task, the resolved scope and base, its paths, the
+  user's earlier keep decisions and this skill. A worker runs steps 2 to 4 on
+  its slice but leaves the checks to you, edits only its own files, does not
+  commit or delegate, and returns the report from step 5. Slop it sees outside
+  its slice goes into that report.
 - When the workers finish, run the project's checks once, resolve the
   cross-slice items yourself, and hand the combined cleanup diff to one fresh
   reviewer who has not seen the workers' reasoning. The reviewer answers the two

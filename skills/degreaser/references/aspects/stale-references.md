@@ -17,8 +17,10 @@ compare existing assessed text with its current implementation.
    timeout or fixture deliberately pinning an older form.
 4. Check mirrored values/counts, supposedly exhaustive lists and omitted members.
    For rewrites, compare old rules and reasons with the new wording and task.
-5. Stale text outside the assessed paths is still in scope when the assessed
-   change made it false. Correct every occurrence one change caused together.
+5. Stale text outside the assessed paths still counts when the assessed
+   change made it false. Correct every occurrence one change caused together
+   where the edit scope (path filter, worker slice) allows it; raise the rest
+   under “Your call”.
 
 Report false text, broken targets and dropped unrevoked rules. Preserve dated
 history, migration explanations, still-working aliases and independent copies.
