@@ -57,7 +57,9 @@ Who carries the burden of proof depends on what the correction risks:
   base named in the request or session, resolved to a commit hash. A path
   filter in the request limits both what you assess and what you edit. Ask
   only when an ambiguity would change what you assess.
-- Include new files and local edits; a diff alone may omit them.
+- Include new files and local edits; a diff alone may omit them. Repository
+  text the assessed change made false belongs to the assessed scope even when
+  it lies outside the diff, unless a path filter in the request excludes it.
 - For a change, treat only slop the change introduced or worsened. Read
   surrounding code for consequences, not to collect unrelated debt. Code the
   change wrote counts as introduced even when it copies an older pattern; lines
