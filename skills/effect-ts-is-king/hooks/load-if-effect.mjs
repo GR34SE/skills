@@ -23,6 +23,6 @@ export const usesEffect = (dir) =>
 
 export const rules = () => readFileSync(join(import.meta.dirname, "../SKILL.md"), "utf8");
 
-if (import.meta.main && usesEffect(process.env.CLAUDE_PROJECT_DIR ?? process.cwd())) {
+if (import.meta.main && usesEffect(process.cwd())) {
   process.stdout.write(rules());
 }
