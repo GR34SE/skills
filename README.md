@@ -14,7 +14,7 @@ npx skills add GR34SE/skills --skill talk-to-me-nicely
 
 ### [degreaser](skills/degreaser/SKILL.md)
 
-Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks, fixes what is safe to fix and asks about the rest.
+Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks.
 
 ```sh
 npx skills add GR34SE/skills --skill degreaser

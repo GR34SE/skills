@@ -1,6 +1,6 @@
 ---
 name: degreaser
-description: Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks, fixes what is safe to fix and asks about the rest. Use when the user names Degreaser, asks to deslop code, or requests a slop review or cleanup. Not a general bug/security review or formatter.
+description: Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks. Use when the user names Degreaser, asks to deslop code, or requests a slop review or cleanup. Not a general bug/security review or formatter.
 ---
 
 # Degreaser
