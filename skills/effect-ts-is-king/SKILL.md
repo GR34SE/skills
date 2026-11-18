@@ -13,7 +13,7 @@ Most Effect code written from habit uses a small corner of the library: generato
 
 ## Scope
 
-- Apply this only where a package manifest lists `effect` or an `@effect/*` package. If none does, stop. Do not introduce Effect into a project unless the user asks.
+- Apply this only where a package manifest lists `effect` or an `@effect/*` package. If none does, stop. This skill is never a reason to add Effect to a project that does not use it.
 - Apply it to the whole task at hand: handlers, workers, integrations, persistence, configuration, pure transformations, and tests.
 - Stay inside the task. Do not rewrite unrelated code, replace the framework, or upgrade packages on your own initiative.
 - Where Effect covers only part of the backend, work within the existing boundary. Do not add a second way of running effects, and do not migrate the rest without being asked.
