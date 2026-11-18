@@ -17,10 +17,8 @@ compare existing assessed text with its current implementation.
    timeout or fixture deliberately pinning an older form.
 4. Check mirrored values/counts, supposedly exhaustive lists and omitted members.
    For rewrites, compare old rules and reasons with the new wording and task.
-5. Cite an assessed path. If stale text is outside it, anchor the finding in the
-   change that made it false (including an old-side removal) and quote each stale
-   location as supporting evidence. Group one change's stale mentions together,
-   listing every occurrence.
+5. Stale text outside the assessed paths is still in scope when the assessed
+   change made it false. Correct every occurrence one change caused together.
 
 Report false text, broken targets and dropped unrevoked rules. Preserve dated
 history, migration explanations, still-working aliases and independent copies.
@@ -28,8 +26,9 @@ A rephrased rule survives if its meaning and reason remain. Report a generator
 rather than its output unless stale committed output itself ships. An audit has
 no old side, so it cannot establish dropped historical rules.
 
-With no findings, name the search roots and names checked; no matches alone do
-not prove absence. External websites are not repository evidence.
+A search without matches proves little until it covers every old form of the
+name and every root where such text lives. External websites are not repository
+evidence.
 
 ## Route elsewhere
 
