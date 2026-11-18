@@ -27,3 +27,11 @@ Maximize use of the Effect API and its ecosystem instead of writing local abstra
 ```sh
 npx skills add GR34SE/skills --skill effect-ts-is-king
 ```
+
+### [rip-van-winkle](skills/rip-van-winkle/SKILL.md)
+
+No legacy APIs or syntax in new code. Makes the agent look up the current LTS, stable versions, built-in APIs and language features before it writes, instead of trusting training data.
+
+```sh
+npx skills add GR34SE/skills --skill rip-van-winkle
+```
