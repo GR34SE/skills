@@ -4,7 +4,8 @@
 with the right contract?
 
 **Applies when:** New code copies or reimplements contracted behavior such as
-clients, retry, caches, logging, randomness or error mapping.
+clients, retry, caches, logging, randomness or error mapping, or repeats a type
+or constant that already has a name.
 
 ## Inspect and decide
 

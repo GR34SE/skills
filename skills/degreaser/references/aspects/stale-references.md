@@ -17,10 +17,10 @@ compare existing assessed text with its current implementation.
    timeout or fixture deliberately pinning an older form.
 4. Check mirrored values/counts, supposedly exhaustive lists and omitted members.
    For rewrites, compare old rules and reasons with the new wording and task.
-5. Cite an assessed path. If stale text is outside it, anchor the finding in the
-   change that made it false (including an old-side removal) and quote each stale
-   location as supporting evidence. Group one change's stale mentions together,
-   listing every occurrence.
+5. Text the assessed change made false is in the assessed scope even when it
+   lies outside the diff. Correct every occurrence one change caused together.
+   When a path filter or a worker slice excludes it, raise it under
+   “Your call” instead.
 
 Report false text, broken targets and dropped unrevoked rules. Preserve dated
 history, migration explanations, still-working aliases and independent copies.
@@ -28,8 +28,9 @@ A rephrased rule survives if its meaning and reason remain. Report a generator
 rather than its output unless stale committed output itself ships. An audit has
 no old side, so it cannot establish dropped historical rules.
 
-With no findings, name the search roots and names checked; no matches alone do
-not prove absence. External websites are not repository evidence.
+A search without matches proves little until it covers every old form of the
+name and every root where such text lives. External websites are not repository
+evidence.
 
 ## Route elsewhere
 
@@ -50,8 +51,8 @@ to copy the unchanged `.env.example` below.
 APP_DATABASE=postgres://localhost/app
 ```
 
-Decision: Setup supplies a name no longer read. Anchor in the assessed rename
-and cite this stale example even if its file was not changed.
+Decision: Setup supplies a name no longer read. Correct this stale example
+even though the change did not touch its file.
 
 ### stale-references-B2 · REPORT
 

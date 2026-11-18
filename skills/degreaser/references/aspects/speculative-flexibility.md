@@ -3,7 +3,8 @@
 **Question:** Does each option or extension point serve a current requirement?
 
 **Applies when:** Options, parameters, flags, variants, strategies, plugins or
-configuration fields are introduced or extended.
+configuration fields are introduced or extended, or the change removes the
+last consumer of existing code.
 
 ## Inspect and decide
 
