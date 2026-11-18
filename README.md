@@ -27,5 +27,3 @@ Maximize use of the Effect API and its ecosystem instead of writing local abstra
 ```sh
 npx skills add GR34SE/skills --skill effect-ts-is-king
 ```
-
-The session-start hook requires Node 22.18 or newer.
