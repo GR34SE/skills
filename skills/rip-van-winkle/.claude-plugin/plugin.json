@@ -1,0 +1,4 @@
+{
+  "name": "rip-van-winkle",
+  "description": "Reminds Claude Code of the rip-van-winkle skill when it installs a package, scaffolds a project or writes a manifest."
+}
