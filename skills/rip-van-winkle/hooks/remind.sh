@@ -1,7 +1,14 @@
 #!/bin/sh
-# PreToolUse hook. Reminds the agent of the rip-van-winkle skill when it
-# installs a package, scaffolds a project or writes a manifest.
-# It never blocks a tool call: it prints a note for the model, or nothing.
+# Reminds the agent of the rip-van-winkle skill. It never blocks anything:
+# it prints a note for the model, or nothing.
+#   remind.sh start   SessionStart hook: one note, before the agent plans.
+#   remind.sh         PreToolUse hook: a note when the agent installs a
+#                     package, scaffolds a project or writes a manifest.
+
+if [ "$1" = start ]; then
+  echo "rip-van-winkle: the versions, packages and APIs you remember are out of date. Before you plan a new project, choose or add a dependency, write a manifest, a config, a Dockerfile or a CI workflow, or pick a version of anything, load the rip-van-winkle skill and follow it. Load it before you decide on the stack, not after."
+  exit 0
+fi
 
 input=$(cat)
 
@@ -45,13 +52,13 @@ fi
 
 case "$kind" in
   install)
-    note="rip-van-winkle: you are installing a package. Check that the language, the runtime or a framework already in this project does not cover this job at the version the project targets, and that you looked the package version up in the registry instead of remembering it. If either check fails, undo the install."
+    note="rip-van-winkle: you are installing a package. First check that the language, the runtime or a framework already in this project does not cover this job at the version the project targets. Then check that you looked the package version up in the registry instead of remembering it. If either check fails, undo the install."
     ;;
   scaffold)
     note="rip-van-winkle: you are scaffolding a project. Look up the current LTS or stable version of the runtime and the framework, and the current form of this scaffolding command, before you rely on the result."
     ;;
   manifest)
-    note="rip-van-winkle: you are writing a manifest or a config that pins versions. Every version in it must come from a lookup or from an existing pin in this project, not from memory. Use the config format that the current version of the tool documents."
+    note="rip-van-winkle: you are writing a manifest or a config. If you chose its contents from memory, they are a draft. For every dependency in it, check whether the platform now does that job by itself, and remove the ones it covers. Every version must come from a lookup or from an existing pin in this project. Use the config format that the current version of the tool documents."
     ;;
 esac
 

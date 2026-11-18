@@ -19,6 +19,8 @@ Code written that way is legacy on the day it is written. The rule of this skill
 - Older syntax where the target version has a direct replacement.
 - A polyfill, shim or build step that exists only for versions the project does not support.
 
+Raising a version number does not fix any of this. The current release of a package you do not need is still legacy.
+
 Some examples, to show the shape of the problem. Node watches files, loads `.env` files, runs TypeScript, and ships `fetch` and a test runner, so a new Node project needs no package for any of these. Python parses TOML in the standard library and writes `list[str] | None` without importing `typing`. Go has `slices`, `maps`, `min` and `max`. Rust has `std::sync::LazyLock`. React takes `ref` as a normal prop. CSS has nesting, `:has()` and container queries.
 
 These were checked on 2026-11-18. They show the pattern and they are not the list to check against. Newer changes exist that this file does not name and that you have never seen. Only the lookup below finds them.
@@ -31,6 +33,8 @@ These were checked on 2026-11-18. They show the pattern and they are not the lis
 - You write or edit a manifest, a compiler or linter config, a Dockerfile or a CI workflow.
 - You set up tooling: tests, watch mode, env loading, build, formatting.
 - You pick a version of anything.
+
+Load this skill before you plan the stack. If you already chose packages or wrote a manifest, those choices came from memory. Treat them as a draft: take each one through steps 1 to 3 and change every one that fails.
 
 Scale the effort to the change. A new project or a new major dependency gets every step. A small change in an existing file gets one check: the API or syntax you are about to write, against the version the project targets.
 
@@ -61,26 +65,32 @@ Rules for choosing:
 
 - Take the LTS where the ecosystem has one, and the latest stable release where it does not. Skip alphas, betas, release candidates and nightlies unless the user asks for one. Some registries list them first, so read the version string.
 - Check that the main dependencies support the version you picked: `engines`, `requires-python`, peer dependencies. If one does not, take the newest version that all of them support, and say which package held you back.
-- If the installed toolchain is older than the target, pin the target in the project anyway. Tell the user which version is installed and give the command that installs the target. Do not install or switch a runtime without being asked.
-- Write the result down where the project reads it: the manifest, the version file, the Dockerfile tag, the CI workflow. Use the version you looked up, not a floating tag such as `latest`.
+- The target is the version you looked up, not the version that happens to be installed. If the installed toolchain is older, tell the user which version is installed and give the command that installs the target. Do not install or switch a runtime without being asked.
+- Pin the target where the project reads it: the minimum version in the manifest (`engines`, `requires-python` and the like), the version file, the Dockerfile tag, the CI workflow. A new project declares the target itself as its minimum. Do not pick an older floor for compatibility that nobody asked for, and do not use a floating tag such as `latest`.
 - If you have no network access, use the installed toolchain as the target and say that you could not check whether it is current.
 
-## 2. Read what changed
+## 2. Find out what the platform does now
 
-Knowing the version number is not enough, because you do not know what that version can do. For each major version between the one you would have picked from memory and the target, open the official release notes, the "what's new" page or the migration guide. For a framework or library, read the current getting-started page too.
+Knowing the version number is not enough, because you do not know what that version can do.
 
-If Context7 or another documentation tool is available in this session, use it for this. It returns the documentation of a specific version and is faster than searching the web. Otherwise fetch the official pages. Trust, in this order: the documentation shipped inside the installed package, the official documentation and release notes, everything else, your memory.
+List the jobs the change needs. For a new service that is, for example: running the code, reloading it during development, loading configuration, making HTTP requests, generating ids, storing data, running tests. For each job, find out how the target version does it. Do this before you think of a package, and do it for every job, including the ones where you are sure you need a package.
 
-Look for four things:
+Ask the toolchain first, because it is exact and needs no network: the `--help` output of the runtime, the compiler and the package manager, and their lists of subcommands. New capabilities show up there as flags and commands you do not recognize. Then check the official documentation of the target version for each job.
+
+Then, for each major version between the one you would have picked from memory and the target, open the release notes, the "what's new" page or the migration guide. For a framework or library, read the current getting-started page too. Look for four things:
 
 1. **Now built in.** Something that used to need a package, a plugin or a flag.
 2. **Deprecated or removed.** APIs, options, commands and whole packages, with their replacements.
 3. **New syntax and APIs** that replace a pattern you would write from habit.
 4. **Changed defaults.** The module system, the config file format, the project layout, the scaffolding command, the recommended tool for a job.
 
-## 3. Before you add a dependency
+If Context7 or another documentation tool is available in this session, use it for this reading. It returns the documentation of a specific version and is faster than searching the web. Otherwise fetch the official pages. Trust, in this order: the documentation shipped inside the installed package, the official documentation and release notes, everything else, your memory.
 
-Ask these in order and stop at the first yes:
+A built-in feature has rules you have not learned, such as required file extensions, flags or config values. When one fails on the first try, read its documentation page and fix your usage. Do not fall back to the package you know. The cause is almost always a rule you missed, not a missing feature.
+
+## 3. Add a dependency only for what is left
+
+For each job that still looks like it needs a package, ask these in order and stop at the first yes:
 
 1. Does the language, its standard library or the runtime do this at the target version?
 2. Does a framework or library already in the project do this?
@@ -111,6 +121,8 @@ When you do add a package, look it up before you install it:
 - Install the current stable version from the registry, not the one you remember.
 - Check that it is alive: a release within the last year or so, no deprecation notice in the registry or the README, no archived repository.
 - Check that the ecosystem has not moved to a successor. The package you remember as the standard choice may be the legacy one now.
+- Match companion packages to what they belong to. Type definitions, plugins and adapters take the same major version as their package, and type definitions for the runtime take the major version of the target runtime.
+- When two packages conflict, look for the fix that keeps both current, such as a newer release or a built-in replacement for one of them. Downgrade only when there is none, and say so.
 - If it comes with a scaffolding or init command, run that command at its current version. Do not write the boilerplate from memory.
 
 ## 4. Write for the target
@@ -131,6 +143,7 @@ When you do add a package, look it up before you install it:
 ## Before you hand off
 
 1. Run the code on the target version: build, tests, linter. If you could not, because the installed toolchain is older, say so.
-2. Read the output of the install, the build and the tests. A deprecation warning that your code or your choice of package caused is a defect. Fix it.
-3. Read your diff once more for the items in "What legacy means here".
-4. Report in a few lines: the versions you chose and where you looked them up, the packages you did not add because the platform covers the job, and anything you could not verify.
+2. In a new project, run the package manager's check for outdated packages: `npm outdated`, `uv tree --outdated`, `pip list --outdated`, `go list -u -m all`, `bundle outdated`, `composer outdated`, `dotnet list package --outdated`. Every line it prints is a version that came from memory. Fix each one or say why it stays.
+3. Read the output of the install, the build and the tests. A deprecation warning that your code or your choice of package caused is a defect. Fix it.
+4. Read your diff once more for the items in "What legacy means here".
+5. Report in a few lines: the versions you chose and where you looked them up, the packages you did not add because the platform covers the job, and anything you could not verify.
