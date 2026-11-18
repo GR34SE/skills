@@ -51,8 +51,8 @@ to copy the unchanged `.env.example` below.
 APP_DATABASE=postgres://localhost/app
 ```
 
-Decision: Setup supplies a name no longer read. Anchor in the assessed rename
-and cite this stale example even if its file was not changed.
+Decision: Setup supplies a name no longer read. Correct this stale example
+even though the change did not touch its file.
 
 ### stale-references-B2 · REPORT
 

@@ -142,6 +142,10 @@ a feature, needs a choice between designs, reaches outside the assessed scope,
 or rests on evidence you could not obtain. A masked error is the standard
 case: surfacing it is correct and still a behavior change.
 
+Code whose last caller the change removed counts as slop the change caused:
+remove it without asking only when it is private and inside the assessed
+scope, otherwise ask.
+
 The user's words override this split. “Review only” or “report” means no edits
 at all: every standing candidate, including the fix-now class, goes to
 “Your call”.
@@ -165,16 +169,18 @@ when empty:
 
 - **Fixed:** location, what changed, and in a few words why it is safe. Then the
   checks you ran and their results.
-- **Your call:** slop the change caused that you did not fix, including text
-  it made false that a path filter kept you from editing. Numbered questions
+- **Your call:** standing candidates in the assessed scope that you did not
+  fix (in an audit, any slop in the named paths), plus text the change made
+  false that a path filter kept you from editing. Numbered questions
   the user can answer briefly (“1 yes, 2 no”), each with the location, the
   consequence of leaving it, the options and the one you recommend.
 - **Not checked:** paths you could not read, checks you could not run, evidence
   you could not obtain.
-- **Also noticed:** one line each, never a question, for what is not this
-  skill's to decide: a bug (also one the change introduced), a security
-  problem, a missing feature, slop that predates the change. Do not fix these
-  here; a review or test audit that runs alongside can pick them up.
+- **Also noticed:** one line each, never a question, for what is outside this
+  skill or outside the assessed scope: a bug (also one the change introduced),
+  a security problem, a missing feature, slop the assessed scope does not
+  cover. Do not fix these here; a review or test audit that runs alongside
+  can pick them up.
 
 Leave out dropped candidates, per-aspect tallies and the story of how you got
 there. If all four parts are empty, say the code is clean. Do not claim runtime,
