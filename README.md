@@ -19,3 +19,11 @@ Fight slop code. Checks your code against 18 slop patterns, from swallowed error
 ```sh
 npx skills add GR34SE/skills --skill degreaser
 ```
+
+### [effect-ts-is-king](skills/effect-ts-is-king/SKILL.md)
+
+Maximize use of the Effect API and its ecosystem instead of writing local abstractions.
+
+```sh
+npx skills add GR34SE/skills --skill effect-ts-is-king
+```
