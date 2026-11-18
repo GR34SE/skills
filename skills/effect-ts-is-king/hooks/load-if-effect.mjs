@@ -1,52 +1,28 @@
-#!/usr/bin/env node
-// Prints SKILL.md when the project depends on Effect. Prints nothing otherwise.
-import { readFileSync, readdirSync, realpathSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { globSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
-const MAX_DEPTH = 3; // root, plus two levels of workspace folders such as packages/api
-const SKIP = new Set(["node_modules", "dist", "build"]);
 const isEffect = (name) => name === "effect" || name.startsWith("@effect/");
 
 const manifestUsesEffect = (file) => {
   try {
-    const pkg = JSON.parse(readFileSync(file, "utf8"));
-    return [pkg.dependencies, pkg.devDependencies, pkg.peerDependencies].some(
-      (deps) => deps && Object.keys(deps).some(isEffect),
-    );
+    const { dependencies, devDependencies, peerDependencies } = JSON.parse(readFileSync(file, "utf8"));
+    return Object.keys({ ...dependencies, ...devDependencies, ...peerDependencies }).some(isEffect);
   } catch {
     return false; // missing or malformed manifest: not an Effect project as far as we can tell
   }
 };
 
-export const usesEffect = (dir, depth = 1) => {
-  if (manifestUsesEffect(join(dir, "package.json"))) return true;
-  if (depth >= MAX_DEPTH) return false;
-  let entries;
-  try {
-    entries = readdirSync(dir, { withFileTypes: true });
-  } catch {
-    return false;
-  }
-  return entries.some(
-    (e) =>
-      e.isDirectory() &&
-      !e.name.startsWith(".") &&
-      !SKIP.has(e.name) &&
-      usesEffect(join(dir, e.name), depth + 1),
-  );
-};
+const ancestors = (dir) => (dirname(dir) === dir ? [dir] : [dir, ...ancestors(dirname(dir))]);
 
-export const rules = () => readFileSync(new URL("../SKILL.md", import.meta.url), "utf8");
+// Looks up to the filesystem root, and two levels down for workspace folders such as packages/api.
+export const usesEffect = (dir) =>
+  [
+    ...ancestors(dir).map((folder) => join(folder, "package.json")),
+    ...globSync("{*,*/*}/package.json", { cwd: dir, exclude: ["node_modules/**"] }).map((file) => join(dir, file)),
+  ].some(manifestUsesEffect);
 
-const runAsScript = () => {
-  try {
-    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
-  } catch {
-    return false; // no resolvable entry script: imported by a host, not run as the hook
-  }
-};
+export const rules = () => readFileSync(join(import.meta.dirname, "../SKILL.md"), "utf8");
 
-if (runAsScript() && usesEffect(process.env.CLAUDE_PROJECT_DIR || process.cwd())) {
+if (import.meta.main && usesEffect(process.env.CLAUDE_PROJECT_DIR ?? process.cwd())) {
   process.stdout.write(rules());
 }
