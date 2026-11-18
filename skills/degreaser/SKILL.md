@@ -165,15 +165,16 @@ when empty:
 
 - **Fixed:** location, what changed, and in a few words why it is safe. Then the
   checks you ran and their results.
-- **Your call:** numbered questions the user can answer briefly (“1 yes, 2 no”).
-  Each gives the location, the consequence of leaving it, the options and the
-  one you recommend.
+- **Your call:** slop the change caused that you did not fix, including text
+  it made false that a path filter kept you from editing. Numbered questions
+  the user can answer briefly (“1 yes, 2 no”), each with the location, the
+  consequence of leaving it, the options and the one you recommend.
 - **Not checked:** paths you could not read, checks you could not run, evidence
   you could not obtain.
-- **Also noticed:** one line each for what is outside this skill but worth
-  knowing: a real bug, a security problem, a missing feature, slop that
-  predates the change. Do not fix these here; a review or test audit that runs
-  alongside can pick them up.
+- **Also noticed:** one line each, never a question, for what is not this
+  skill's to decide: a bug (also one the change introduced), a security
+  problem, a missing feature, slop that predates the change. Do not fix these
+  here; a review or test audit that runs alongside can pick them up.
 
 Leave out dropped candidates, per-aspect tallies and the story of how you got
 there. If all four parts are empty, say the code is clean. Do not claim runtime,
