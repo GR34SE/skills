@@ -6,6 +6,11 @@
       "name": "talk-to-me-nicely",
       "source": "skills/talk-to-me-nicely",
       "description": "Always applies the talk-to-me-nicely rules in Cursor."
+    },
+    {
+      "name": "degreaser",
+      "source": "skills/degreaser",
+      "description": "Runs degreaser before Cursor opens a pull request."
     }
   ]
 }

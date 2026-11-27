@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "pi": {
-    "extensions": ["./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.js"],
+    "extensions": ["./skills/talk-to-me-nicely/extensions/talk-to-me-nicely.js", "./skills/degreaser/extensions/degreaser.js"],
     "skills": ["./skills"]
   }
 }

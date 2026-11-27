@@ -1,0 +1,16 @@
+{
+  "name": "degreaser",
+  "description": "Runs degreaser before Cursor opens a pull request.",
+  "skills": [],
+  "hooks": {
+    "version": 1,
+    "hooks": {
+      "preToolUse": [
+        {
+          "matcher": "Shell",
+          "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/pre-pr.sh\" --cursor"
+        }
+      ]
+    }
+  }
+}
