@@ -1,4 +1,4 @@
 {
   "name": "degreaser",
-  "description": "Runs degreaser before Codex opens a pull request."
+  "description": "Blocks gh, gh-axi and no-mistakes pull request commands in Codex until the agent confirms a degreaser run. Needs the degreaser skill, which this plugin does not install."
 }
