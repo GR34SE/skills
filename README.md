@@ -20,7 +20,7 @@ Fight slop code. Checks your code against 18 slop patterns, from swallowed error
 npx skills add GR34SE/skills --skill degreaser
 ```
 
-A hook stops `gh pr create`, `glab mr create` and `no-mistakes axi run` until the agent has run degreaser on the branch and you have decided every finding it asks about. It works in Claude Code after the command above. Codex and Cursor need the `degreaser` plugin from this repo's marketplace, and Pi needs `pi install git:github.com/GR34SE/skills`.
+A hook stops `gh pr create`, `gh-axi pr create`, `glab mr create`, `no-mistakes axi run` and MCP tools that create a pull request. It tells the agent to run degreaser on the branch and to ask you about every finding that needs your decision. The agent then confirms with the prefix `DEGREASER_DONE=1`, and the hook does not check that claim. It works in Claude Code after the command above. Codex and Cursor need the `degreaser` plugin from this repo's marketplace, and Pi needs `pi install git:github.com/GR34SE/skills`.
 
 ### [effect-ts-is-king](skills/effect-ts-is-king/SKILL.md)
 
