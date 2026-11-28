@@ -1,4 +1,4 @@
 {
   "name": "degreaser",
-  "description": "Tells the agent at session start to run degreaser before a pull request. Needs the degreaser skill, which this plugin does not install."
+  "description": "Runs degreaser before a pull request."
 }

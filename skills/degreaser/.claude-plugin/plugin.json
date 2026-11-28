@@ -1,4 +1,4 @@
 {
   "name": "degreaser",
-  "description": "Tells the agent at session start to run degreaser before a pull request."
+  "description": "Runs degreaser before a pull request."
 }
