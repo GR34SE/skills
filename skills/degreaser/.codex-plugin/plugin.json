@@ -1,0 +1,4 @@
+{
+  "name": "degreaser",
+  "description": "Runs degreaser before a pull request."
+}
