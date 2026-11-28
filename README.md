@@ -14,7 +14,7 @@ npx skills add GR34SE/skills --skill talk-to-me-nicely
 
 ### [degreaser](skills/degreaser/SKILL.md)
 
-Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks.
+Fight slop code. Checks your code against 18 slop patterns, from swallowed errors to tests that test their own mocks. Runs before every pull request.
 
 ```sh
 npx skills add GR34SE/skills --skill degreaser
@@ -36,4 +36,3 @@ No legacy APIs or syntax in new code. Makes the agent look up the current LTS, s
 npx skills add GR34SE/skills --skill rip-van-winkle
 ```
 
-Hooks remind the agent to load the skill at the start of a session and when it installs a package, scaffolds a project or writes a manifest. Claude Code loads them from a global install (add `-g` to the command above), or from a project install in a folder you trust. Codex and Cursor also need the `rip-van-winkle` plugin from this repo's marketplace, and Codex asks you to approve the hooks in `/hooks`. On a Cursor plan without team marketplaces, copy `skills/rip-van-winkle` to `~/.cursor/plugins/local/`. Pi gets the skill and the hooks from `pi install git:github.com/GR34SE/skills`.

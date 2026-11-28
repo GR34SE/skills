@@ -1,0 +1,15 @@
+{
+  "name": "degreaser",
+  "description": "Runs degreaser before a pull request.",
+  "skills": [],
+  "hooks": {
+    "version": 1,
+    "hooks": {
+      "sessionStart": [
+        {
+          "command": "jq -Rs '{additional_context: .}' \"${CURSOR_PLUGIN_ROOT}/before-pr.md\""
+        }
+      ]
+    }
+  }
+}

@@ -8,9 +8,14 @@
       "description": "Always applies the talk-to-me-nicely rules in Cursor."
     },
     {
+      "name": "degreaser",
+      "source": "skills/degreaser",
+      "description": "Runs degreaser before a pull request."
+    },
+    {
       "name": "rip-van-winkle",
       "source": "skills/rip-van-winkle",
-      "description": "Reminds Cursor of the rip-van-winkle skill at session start and when it installs a package, scaffolds a project or writes a manifest. Hooks only: install the skill itself with `npx skills add GR34SE/skills --skill rip-van-winkle`."
+      "description": "Loads rip-van-winkle before the agent picks a version or a package."
     }
   ]
 }

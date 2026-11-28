@@ -1,4 +1,4 @@
 {
   "name": "rip-van-winkle",
-  "description": "Reminds Claude Code of the rip-van-winkle skill at session start and when it installs a package, scaffolds a project or writes a manifest."
+  "description": "Loads rip-van-winkle before the agent picks a version or a package."
 }
