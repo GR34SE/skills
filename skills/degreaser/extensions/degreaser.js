@@ -1,12 +1,9 @@
-import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 
-const script = fileURLToPath(new URL("../hooks/pre-pr.sh", import.meta.url));
+const rule = readFileSync(new URL("../before-pr.md", import.meta.url), "utf8");
 
 export default function (pi) {
-  pi.on("tool_call", (event) => {
-    if (event.toolName !== "bash") return;
-    const result = spawnSync("sh", [script], { input: JSON.stringify({ command: event.input.command }), encoding: "utf8" });
-    if (result.status === 2) return { block: true, reason: result.stderr.trim() };
+  pi.on("before_agent_start", (event) => {
+    event.systemPromptOptions.sections["degreaser"] = rule;
   });
 }

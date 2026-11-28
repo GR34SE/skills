@@ -20,7 +20,7 @@ Fight slop code. Checks your code against 18 slop patterns, from swallowed error
 npx skills add GR34SE/skills --skill degreaser
 ```
 
-In Claude Code, a hook blocks shell commands that contain `gh pr create`, `gh pr new`, `gh-axi pr create` or `no-mistakes axi run` until the agent adds the comment `# degreaser-done` to confirm that it ran degreaser on the branch.
+In Claude Code, the skill also tells the agent at the start of every session to run degreaser before it opens a pull request.
 
 ### [effect-ts-is-king](skills/effect-ts-is-king/SKILL.md)
 

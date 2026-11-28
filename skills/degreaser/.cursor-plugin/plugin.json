@@ -1,14 +1,13 @@
 {
   "name": "degreaser",
-  "description": "Blocks gh, gh-axi and no-mistakes pull request commands in Cursor until the agent confirms a degreaser run. Needs the degreaser skill, which this plugin does not install.",
+  "description": "Tells the agent at session start to run degreaser before a pull request. Needs jq and the degreaser skill, which this plugin does not install.",
   "skills": [],
   "hooks": {
     "version": 1,
     "hooks": {
-      "preToolUse": [
+      "sessionStart": [
         {
-          "matcher": "Shell",
-          "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/pre-pr.sh\" --cursor"
+          "command": "jq -Rs '{additional_context: .}' \"${CURSOR_PLUGIN_ROOT}/before-pr.md\""
         }
       ]
     }

@@ -1,4 +1,4 @@
 {
   "name": "degreaser",
-  "description": "Blocks gh, gh-axi and no-mistakes pull request commands in Claude Code until the agent confirms a degreaser run."
+  "description": "Tells the agent at session start to run degreaser before a pull request."
 }
