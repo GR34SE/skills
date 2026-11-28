@@ -143,7 +143,7 @@ When you do add a package, look it up before you install it:
 ## Before you hand off
 
 1. Run the code on the target version: build, tests, linter. If you could not, because the installed toolchain is older, say so.
-2. In a new project, run the package manager's check for outdated packages: `npm outdated`, `uv tree --outdated`, `pip list --outdated`, `go list -u -m all`, `bundle outdated`, `composer outdated`, `dotnet list package --outdated`. Every line it prints is a version that came from memory. Fix each one or say why it stays.
+2. In a new project, run the package manager's check for outdated packages: `npm outdated`, `uv tree --outdated --depth 1`, `pip list --outdated --not-required`, `go list -u -m all`, `bundle outdated --only-explicit`, `composer outdated --direct`, `dotnet list package --outdated`. A dependency you declared that the check reports as outdated has a version that came from memory. Fix it or say why it stays. Leave the dependencies of your dependencies alone.
 3. Read the output of the install, the build and the tests. A deprecation warning that your code or your choice of package caused is a defect. Fix it.
 4. Read your diff once more for the items in "What legacy means here".
 5. Report in a few lines: the versions you chose and where you looked them up, the packages you did not add because the platform covers the job, and anything you could not verify.

@@ -1,0 +1,21 @@
+{
+  "name": "rip-van-winkle",
+  "description": "Reminds Cursor of the rip-van-winkle skill at session start and when it installs a package, scaffolds a project or writes a manifest. Hooks only: install the skill itself with `npx skills add GR34SE/skills --skill rip-van-winkle`.",
+  "skills": [],
+  "hooks": {
+    "version": 1,
+    "hooks": {
+      "sessionStart": [
+        {
+          "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/remind.sh\" start --cursor"
+        }
+      ],
+      "postToolUse": [
+        {
+          "matcher": "Shell|Write",
+          "command": "sh \"${CURSOR_PLUGIN_ROOT}/hooks/remind.sh\" --cursor"
+        }
+      ]
+    }
+  }
+}
