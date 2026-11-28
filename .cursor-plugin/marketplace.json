@@ -11,11 +11,6 @@
       "name": "degreaser",
       "source": "skills/degreaser",
       "description": "Runs degreaser before a pull request."
-    },
-    {
-      "name": "rip-van-winkle",
-      "source": "skills/rip-van-winkle",
-      "description": "Loads rip-van-winkle before the agent picks a version or a package."
     }
   ]
 }

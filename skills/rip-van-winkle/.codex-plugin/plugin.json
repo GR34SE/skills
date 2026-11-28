@@ -1,4 +1,0 @@
-{
-  "name": "rip-van-winkle",
-  "description": "Loads rip-van-winkle before the agent picks a version or a package."
-}

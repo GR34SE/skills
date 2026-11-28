@@ -1,1 +1,0 @@
-The versions, packages and APIs you remember are out of date. Before you plan a new project, choose or add a dependency, write a manifest, a config, a Dockerfile or a CI workflow, or pick a version of anything, load the rip-van-winkle skill and follow it. Load it before you decide on the stack, not after.
